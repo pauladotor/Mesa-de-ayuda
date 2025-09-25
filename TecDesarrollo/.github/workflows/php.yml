@@ -1,4 +1,4 @@
-name: PHP Lint
+name: PHP Workflow
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  php-lint:
+  php-Workflow:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar código
@@ -19,7 +19,8 @@ jobs:
           php-version: '8.2'
 
       - name: Revisar sintaxis PHP
-        run: |
+        run: 
           find . -type f -name "*.php" -print0 | xargs -0 -n1 php -l
+
       - name: Ejecutar pruebas
         run: php tests/test.php
