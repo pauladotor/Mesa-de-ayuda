@@ -2,27 +2,6 @@ Mesa de ayuda
 
 Sistema CRUD para gestión de tickets de soporte técnico con CI/CD automatizado.
 
-##  Tabla de Contenidos
-
-- [Características](#características)
-- [Tecnologías](#tecnologías)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [Instalación Local](#instalación-local)
-- [Despliegue en Render](#despliegue-en-render)
-- [Variables de Entorno](#variables-de-entorno)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Uso](#uso)
-
-## Características
-
-- ✅ CRUD completo de tickets
-- ✅ Gestión de usuarios
-- ✅ Sistema de autenticación
-- ✅ CI/CD automatizado con GitHub Actions
-- ✅ Despliegue automático a Render
-- ✅ Tests automatizados
-- ✅ Validación de sintaxis PHP
-
 ##  Tecnologías
 
 - **Backend:** PHP 8.1
