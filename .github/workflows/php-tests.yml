@@ -22,8 +22,8 @@ jobs:
 
     - name: Run PHP files
       run: |
-        cd TECDESARROLLO
-        # Ejecuta todos los archivos PHP que quieras probar
+        cd TecDesarrollo
+        echo "Probando archivos PHP en TecDesarrollo/"
         for file in *.php; do
           echo "Ejecutando $file"
           php "$file"
