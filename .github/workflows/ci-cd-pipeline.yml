@@ -32,7 +32,7 @@ jobs:
     - name: 🔍 Validar sintaxis PHP
       run: |
         echo "Validando sintaxis de archivos PHP..."
-        find . -name "*.php" -exec php -l {} \; 2>&1 | tee php-lint.log
+        find TecDesarrollo -name "*.php" -exec php -l {} \; 2>&1 | tee php-lint.log
         if grep -q "Parse error" php-lint.log; then
           echo "❌ Errores de sintaxis encontrados"
           exit 1
@@ -44,8 +44,8 @@ jobs:
       run: |
         cd TecDesarrollo
         echo "Ejecutando archivos PHP de prueba..."
-        if [ -f "test.php" ]; then
-          php test.php
+        if [ -f "test_cicd.php" ]; then
+          php test_cicd.php
         fi
         echo "✅ Pruebas completadas"
 
@@ -75,7 +75,6 @@ jobs:
       run: |
         if [ -z "$RENDER_DEPLOY_HOOK" ]; then
           echo "⚠️ RENDER_DEPLOY_HOOK no configurado"
-          echo "Por favor configura el secret en GitHub"
           exit 1
         fi
         
@@ -88,7 +87,6 @@ jobs:
       run: |
         echo "==================================="
         echo "🎉 DESPLIEGUE COMPLETADO"
-        echo "==================================="
         echo "Commit: ${{ github.sha }}"
         echo "Autor: ${{ github.actor }}"
         echo "Mensaje: ${{ github.event.head_commit.message }}"
