@@ -1,5 +1,5 @@
 <?php
-// Redirige a la raíz de las vistas, dejando que el router maneje la URL.
-header('Location: /TecDesarrollo/public/view/Home', true, 302);
+// Redirección simple a la raíz de la aplicación, dejando que vercel.json maneje el resto.
+header('Location: /', true, 302);
 exit();
 ?>
