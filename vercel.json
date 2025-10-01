@@ -8,7 +8,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/TecDesarrollo/public/view/Home/index.php"
+      "dest": "/TecDesarrollo/public/view/Home/$1"
     }
   ]
 }

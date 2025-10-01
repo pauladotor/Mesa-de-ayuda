@@ -1,6 +1,5 @@
 <?php
-// Este archivo redirige a la página principal (index.php) dentro de la carpeta Home
-// Usamos el código de estado 302 para la redirección
-header('Location: /TecDesarrollo/public/view/Home/index.php', true, 302);
+// Redirige a la raíz de las vistas, dejando que el router maneje la URL.
+header('Location: /TecDesarrollo/public/view/Home', true, 302);
 exit();
 ?>
