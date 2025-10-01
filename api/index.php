@@ -1,5 +1,5 @@
 <?php
-// Redirección simple a la raíz de la aplicación, dejando que vercel.json maneje el resto.
-header('Location: /', true, 302);
+// Redirecciona al index.php dentro de la carpeta Home, usando la nueva raíz virtual /TecDesarrollo/public/
+header('Location: /view/Home/index.php', true, 302);
 exit();
 ?>
