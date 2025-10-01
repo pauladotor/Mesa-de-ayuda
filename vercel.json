@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "TecDesarrollo/**/*.php",
+      "use": "@vercel/php"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/TecDesarrollo/public/index.php"
+    }
+  ]
+}
