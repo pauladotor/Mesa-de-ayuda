@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎫 Mesa de Ayuda - Sistema de Tickets
 
 Sistema CRUD para gestión de tickets de soporte técnico con CI/CD automatizado.
@@ -295,3 +296,7 @@ Este proyecto es parte de una actividad académica.
 ---
 
 **Nota:** Este proyecto incluye CI/CD automatizado. Cada push a la rama `master` ejecutará automáticamente los tests y desplegará a producción si todo está correcto. 🚀
+=======
+Mesa de ayuda
+
+>>>>>>> 19b4cc9b5eb857dcd6df0e85b8a44f66b1b55ff0
