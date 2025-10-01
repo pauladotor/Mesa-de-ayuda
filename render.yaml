@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: mesa-de-ayuda
+    env: php
+    region: oregon
+    plan: free
+    branch: master
+    buildCommand: |
+      echo "Instalando dependencias..."
+      # Si usas composer, descomenta la siguiente línea:
+      # composer install --no-dev --optimize-autoloader
+    startCommand: php -S 0.0.0.0:$PORT -t TecDesarrollo/view
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASS
+        sync: false
+      - key: DB_PORT
+        value: 3306
+    healthCheckPath: /index.php

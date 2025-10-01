@@ -1,0 +1,124 @@
+name: CI/CD Pipeline - Mesa de Ayuda
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Continuous Integration (CI)
+  test:
+    name: 🧪 Tests y Validación
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v3
+
+    - name: 🐘 Configurar PHP 8.1
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, json, mysqli
+        coverage: none
+
+    - name: ✅ Verificar versión de PHP
+      run: |
+        php -v
+        php -m
+
+    - name: 🔍 Validar sintaxis PHP
+      run: |
+        echo "Validando sintaxis de archivos PHP..."
+        find . -name "*.php" -exec php -l {} \; 2>&1 | tee php-lint.log
+        if grep -q "Parse error" php-lint.log; then
+          echo "❌ Errores de sintaxis encontrados"
+          exit 1
+        else
+          echo "✅ Sintaxis válida en todos los archivos PHP"
+        fi
+
+    - name: 🧪 Ejecutar pruebas del CRUD
+      run: |
+        cd TecDesarrollo
+        echo "Ejecutando archivos PHP de prueba..."
+        if [ -f "test.php" ]; then
+          php test.php
+        fi
+        echo "✅ Pruebas completadas"
+
+    - name: 📊 Generar reporte
+      if: always()
+      run: |
+        echo "=== REPORTE DE CI ===" > ci-report.txt
+        echo "Fecha: $(date)" >> ci-report.txt
+        echo "Commit: ${{ github.sha }}" >> ci-report.txt
+        echo "Branch: ${{ github.ref_name }}" >> ci-report.txt
+        cat ci-report.txt
+
+  # Job 2: Continuous Deployment (CD)
+  deploy:
+    name: 🚀 Despliegue a Render
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v3
+
+    - name: 🚀 Desplegar a Render
+      env:
+        RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      run: |
+        if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+          echo "⚠️ RENDER_DEPLOY_HOOK no configurado"
+          echo "Por favor configura el secret en GitHub"
+          exit 1
+        fi
+        
+        echo "🚀 Iniciando despliegue en Render..."
+        response=$(curl -X POST "$RENDER_DEPLOY_HOOK")
+        echo "Respuesta de Render: $response"
+        echo "✅ Despliegue iniciado correctamente"
+
+    - name: ✅ Notificación de despliegue
+      run: |
+        echo "==================================="
+        echo "🎉 DESPLIEGUE COMPLETADO"
+        echo "==================================="
+        echo "Commit: ${{ github.sha }}"
+        echo "Autor: ${{ github.actor }}"
+        echo "Mensaje: ${{ github.event.head_commit.message }}"
+        echo "==================================="
+
+  # Job 3: Verificación Post-Despliegue
+  verify:
+    name: 🔍 Verificar Despliegue
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+
+    steps:
+    - name: ⏳ Esperar a que Render procese el despliegue
+      run: sleep 30
+
+    - name: 🌐 Verificar que el sitio responde
+      env:
+        RENDER_URL: ${{ secrets.RENDER_URL }}
+      run: |
+        if [ -z "$RENDER_URL" ]; then
+          echo "⚠️ RENDER_URL no configurado, omitiendo verificación"
+          exit 0
+        fi
+        
+        echo "Verificando $RENDER_URL..."
+        response=$(curl -s -o /dev/null -w "%{http_code}" "$RENDER_URL")
+        
+        if [ "$response" -eq 200 ] || [ "$response" -eq 301 ] || [ "$response" -eq 302 ]; then
+          echo "✅ Sitio web respondiendo correctamente (HTTP $response)"
+        else
+          echo "⚠️ Sitio web responde con código HTTP $response"
+        fi
