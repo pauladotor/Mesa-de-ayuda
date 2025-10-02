@@ -15,4 +15,4 @@ jobs:
     
     - name: Trigger Render Deploy
       run: |
-        curl -X POST ${{ https://api.render.com/deploy/srv-d3etqqmmcj7s73dqqijg?key=QPuNs_VXUgA }}
+        curl -X POST ${{ 'https://api.render.com/deploy/srv-d3etqqmmcj7s73dqqijg?key=QPuNs_VXUgA' }}
