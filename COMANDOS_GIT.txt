@@ -4,7 +4,7 @@
 git add .
 
 # 2. Hacer commit con un mensaje descriptivo
-git commit -m "Fix: Configurar Apache para ejecutar PHP correctamente"
+git commit -m "Fix: Configurar PostgreSQL encoding y Apache para PHP"
 
 # 3. Subir los cambios a GitHub
 git push origin main

@@ -23,7 +23,9 @@ class Database {
             // Conexión a PostgreSQL
             $dsn = "pgsql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name;
             $this->conn = new PDO($dsn, $this->username, $this->password);
-            $this->conn->exec("set names utf8");
+            
+            // Configurar el encoding para PostgreSQL
+            $this->conn->exec("SET CLIENT_ENCODING TO 'UTF8'");
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $exception) {
             echo "Error de conexión: " . $exception->getMessage();
