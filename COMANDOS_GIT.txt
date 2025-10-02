@@ -1,0 +1,23 @@
+# Comandos para subir los cambios a GitHub y redesplegar en Render
+
+# 1. Agregar todos los archivos modificados
+git add .
+
+# 2. Hacer commit con un mensaje descriptivo
+git commit -m "Fix: Configurar Apache para ejecutar PHP correctamente"
+
+# 3. Subir los cambios a GitHub
+git push origin main
+
+# Render detectará automáticamente los cambios y redesplegará la aplicación
+# Esto tomará aproximadamente 5-10 minutos
+
+# Para ver el progreso:
+# - Ve a https://dashboard.render.com
+# - Selecciona tu Web Service "mesa-ayuda-web"
+# - Haz clic en la pestaña "Logs" para ver el progreso del despliegue
+
+# Una vez completado, accede a tu URL:
+# https://mesa-de-ayuda-final.onrender.com
+
+# Deberías ver la página de login automáticamente
