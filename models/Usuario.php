@@ -23,9 +23,9 @@ class Usuario {
             // Encriptar contraseña
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
-            // Insertar usuario
+            // Insertar usuario (PostgreSQL usa TRUE en lugar de 1 para BOOLEAN)
             $query = "INSERT INTO usuarios (nombre_usuario, correo_usuario, celular_usuario, contrasena_usuario, rol_id, activo, fecha_registro) 
-                     VALUES (?, ?, ?, ?, ?, 1, NOW())";
+                     VALUES (?, ?, ?, ?, ?, TRUE, NOW())";
             
             $stmt = $this->db->prepare($query);
             $result = $stmt->execute([$nombre, $correo, $celular, $hashed_password, $rol_id]);
