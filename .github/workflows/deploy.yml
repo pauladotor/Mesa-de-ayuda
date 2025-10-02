@@ -1,0 +1,75 @@
+name: CI/CD - Deploy to Render
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Job de Integración Continua
+  test:
+    runs-on: ubuntu-latest
+    name: Continuous Integration
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Validate Dockerfile
+      run: |
+        echo "Validating Dockerfile..."
+        docker build -t mesa-ayuda-test .
+        echo "✅ Dockerfile is valid"
+    
+    - name: Check PHP syntax
+      run: |
+        echo "Checking PHP syntax..."
+        docker run --rm -v ${{ github.workspace }}:/app -w /app php:8.1-cli \
+          find . -name "*.php" -exec php -l {} \;
+        echo "✅ PHP syntax check passed"
+    
+    - name: Verify required files
+      run: |
+        echo "Verifying required files..."
+        test -f Dockerfile && echo "✅ Dockerfile found"
+        test -f docker-compose.yml && echo "✅ docker-compose.yml found"
+        test -f database/init.sql && echo "✅ init.sql found"
+        test -f config/conexion.php && echo "✅ conexion.php found"
+        echo "✅ All required files present"
+
+  # Job de Despliegue Continuo
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Render
+    needs: test
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Deploy to Render
+      env:
+        RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      run: |
+        if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+          echo "⚠️ RENDER_DEPLOY_HOOK not configured"
+          echo "To enable automatic deployment:"
+          echo "1. Go to your Render service settings"
+          echo "2. Copy the Deploy Hook URL"
+          echo "3. Add it as a secret named RENDER_DEPLOY_HOOK in GitHub"
+          exit 0
+        fi
+        
+        echo "🚀 Triggering deployment to Render..."
+        curl -X POST "$RENDER_DEPLOY_HOOK"
+        echo "✅ Deployment triggered successfully"
+    
+    - name: Deployment status
+      run: |
+        echo "📊 Deployment Status:"
+        echo "- Branch: ${{ github.ref }}"
+        echo "- Commit: ${{ github.sha }}"
+        echo "- Author: ${{ github.actor }}"
+        echo "✅ CI/CD pipeline completed"

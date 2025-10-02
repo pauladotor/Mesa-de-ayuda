@@ -1,0 +1,34 @@
+# Usar PHP 8.1 con Apache
+FROM php:8.1-apache
+
+# Instalar dependencias del sistema para PostgreSQL
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql pgsql \
+    && rm -rf /var/lib/apt/lists/*
+
+# Habilitar mod_rewrite de Apache
+RUN a2enmod rewrite
+
+# Configurar el DocumentRoot de Apache
+ENV APACHE_DOCUMENT_ROOT=/var/www/html
+
+# Actualizar la configuración de Apache
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Configurar permisos para Apache
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
+
+# Copiar archivos de la aplicación
+COPY . /var/www/html/
+
+# Configurar permisos después de copiar
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
+
+# Exponer el puerto 80
+EXPOSE 80
+
+# Comando para iniciar Apache
+CMD ["apache2-foreground"]

@@ -1,0 +1,48 @@
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+*.cache
+
+# Dependencias (si usas Composer)
+vendor/
+composer.lock
+
+# Archivos de backup
+*.bak
+*.backup
+*~
+
+# Docker
+.docker/
+
+# Archivos de prueba
+test/
+tests/
+phpunit.xml
+
+# Archivos personales
+notas.txt
+TODO.txt

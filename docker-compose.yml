@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # Servicio de base de datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: mesa_ayuda_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-usuarios_db}
+      POSTGRES_USER: ${DB_USER:-mesaayuda}
+      POSTGRES_PASSWORD: ${DB_PASS:-mesaayuda123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mesa_ayuda_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-mesaayuda}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Servicio de la aplicación PHP
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mesa_ayuda_web
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-usuarios_db}
+      DB_USER: ${DB_USER:-mesaayuda}
+      DB_PASS: ${DB_PASS:-mesaayuda123}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - mesa_ayuda_network
+
+volumes:
+  db_data:
+
+networks:
+  mesa_ayuda_network:
+    driver: bridge
