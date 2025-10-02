@@ -6,32 +6,15 @@ RewriteEngine On
 # Establecer el índice por defecto
 DirectoryIndex index.php index.html
 
-# Permitir acceso a todos los archivos
-<FilesMatch "\.(php|html|css|js|png|jpg|jpeg|gif|ico|svg)$">
-    Require all granted
-</FilesMatch>
-
-# Configuración de PHP
-<IfModule mod_php.c>
-    php_flag display_errors Off
-    php_flag log_errors On
-    php_value error_log /var/log/apache2/php_errors.log
-</IfModule>
-
 # Proteger archivos sensibles
 <FilesMatch "^\.">
     Require all denied
 </FilesMatch>
 
 # Prevenir acceso a archivos de configuración
-<FilesMatch "\.(env|ini|log|sh|sql)$">
+<FilesMatch "\.(env|ini|log|sh)$">
     Require all denied
 </FilesMatch>
-
-# Permitir acceso a la carpeta database solo para archivos SQL necesarios
-<Directory "database">
-    Require all denied
-</Directory>
 
 # Habilitar compresión
 <IfModule mod_deflate.c>
