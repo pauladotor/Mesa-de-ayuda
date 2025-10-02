@@ -269,7 +269,14 @@ Ahora, cada vez que hagas `git push`, se desplegará automáticamente.
 - Asegúrate de que las carpetas `css/` e `img/` estén en el repositorio
 - Revisa los permisos de archivos en el contenedor
 
-#### 4. "Application failed to respond"
+#### 4. "Forbidden - You don't have permission to access this resource"
+**Síntoma**: Error 403 al acceder a la URL
+**Solución**:
+- Asegúrate de que existe un archivo `index.php` en la raíz del proyecto
+- Verifica que el Dockerfile configure correctamente los permisos de Apache
+- El archivo `index.php` en la raíz redirige automáticamente a `/view/Home/index.php`
+
+#### 5. "Application failed to respond"
 **Síntoma**: Render muestra este mensaje
 **Solución**:
 - El contenedor puede estar tardando en iniciar

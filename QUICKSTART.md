@@ -159,27 +159,40 @@ Internal URL: postgresql://mesaayuda:abc123xyz@dpg-xxxxx-a:5432/usuarios_db
 
 **Prueba estas funciones:**
 - [ ] Login funciona
-- [ ] Puedes ver el panel de administración
 - [ ] Puedes crear un nuevo ticket
 - [ ] Los estilos CSS se ven correctamente
 
 ## 🔧 Solución Rápida de Problemas
 
+### ❌ Error: "Forbidden - You don't have permission to access this resource"
+
+**Causa**: Apache no encuentra el archivo index.php o no tiene permisos
+
+**Solución**:
+1. Asegúrate de que el archivo `index.php` existe en la raíz del proyecto
+2. Verifica que el Dockerfile esté actualizado con la configuración de permisos
+3. Haz commit y push de los cambios:
+```bash
+git add index.php .htaccess Dockerfile
+git commit -m "Fix Apache permissions"
+git push origin main
+```
+4. Render redesplegará automáticamente
+
 ### ❌ Error: "Application failed to respond"
 
-**Causa**: Variables de entorno mal configuradas
+**Causa**: Variables de entorno mal configuradas o contenedor no inicia
 
 **Solución**:
 1. Ve a Settings → Environment
-2. Verifica que `DB_HOST` sea el **Internal** (sin `mysql://`, sin puerto, sin usuario)
+2. Verifica que `DB_HOST` sea el **Internal** (sin `postgresql://`, sin puerto, sin usuario)
 3. Ejemplo correcto: `dpg-xxxxx-a`
-4. Ejemplo incorrecto: `mysql://user:pass@dpg-xxxxx-a:3306/db`
+4. Ejemplo incorrecto: `postgresql://user:pass@dpg-xxxxx-a:5432/db`
+5. Revisa los logs para ver errores específicos
 
 ### ❌ Error: "SQLSTATE[HY000] [2002] Connection refused"
 
 **Causa**: No puede conectarse a la base de datos
-
-**Solución**:
 1. Verifica que la base de datos esté "Available" en Render
 2. Verifica que ambos servicios estén en la **misma región**
 3. Usa el Internal Database URL, no el External
