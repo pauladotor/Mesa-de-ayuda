@@ -107,23 +107,6 @@ Las siguientes variables de entorno son necesarias para el funcionamiento del si
 - Incluir datos iniciales: roles, departamentos y usuarios de prueba
 - Crear triggers para actualizar automáticamente `fecha_actualizacion`
 
-#### 4. Configuración de rutas y permisos
-**Problema**: Apache no podía servir correctamente los archivos PHP y los recursos estáticos (CSS, imágenes).
-
-**Solución**:
-- Configurar correctamente el `DocumentRoot` en el Dockerfile
-- Establecer permisos adecuados con `chown` y `chmod` para el usuario `www-data`
-- Habilitar `mod_rewrite` de Apache
-
-#### 5. Diferencias entre entorno local y producción
-**Problema**: La aplicación funcionaba localmente con XAMPP pero fallaba en Docker.
-
-**Solución**:
-- Usar variables de entorno con valores por defecto para desarrollo local
-- Crear `docker-compose.yml` para replicar el entorno de producción localmente
-- Probar exhaustivamente con Docker antes de desplegar
-- Asegurar compatibilidad entre PostgreSQL local y en Render
-
 ### Proceso de Despliegue
 
 1. **Preparación**:
