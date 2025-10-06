@@ -44,7 +44,7 @@ $total_tickets = count($todos_tickets);
                 </div>
                 <div class="col-md-6 text-end">
                     <span class="me-3">👋 Admin: <?php echo htmlspecialchars($_SESSION['nombre_usuario']); ?></span>
-                    <a href="logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>                </div>
                 </div>
             </div>
         </div>

@@ -37,8 +37,7 @@ $resueltos = count(array_filter($mis_tickets, function($t) { return $t['estado']
                 </div>
                 <div class="col-md-6 text-end">
                     <span class="me-3">👋 Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre_usuario']); ?></span>
-                    <a href="logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
-                </div>
+                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>                </div>
             </div>
         </div>
     </header>
