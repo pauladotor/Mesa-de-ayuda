@@ -79,7 +79,7 @@ if (isset($_GET['cerrarTicket']) && $_GET['cerrarTicket'] == 1) {
                         <a href="mis_tickets.php" class="btn btn-outline-light btn-sm me-2"> Mis Tickets</a>
                         <a href="../Home/cliente.php" class="btn btn-outline-light btn-sm me-2"> Dashboard</a>
                     <?php } ?>
-                    <a href="../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
                 </div>
             </div>
         </div>

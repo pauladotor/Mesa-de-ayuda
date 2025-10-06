@@ -20,7 +20,6 @@ $todos_tickets = $ticket->obtenerTodosLosTickets();
 $admin_count = count(array_filter($usuarios, function($u) { return $u['rol_id'] == 1; }));
 $cliente_count = count(array_filter($usuarios, function($u) { return $u['rol_id'] == 2; }));
 $tecnico_count = count(array_filter($usuarios, function($u) { return $u['rol_id'] == 3; }));
-
 $tickets_abiertos = count(array_filter($todos_tickets, function($t) { return $t['estado'] == 'Abierto'; }));
 $tickets_progreso = count(array_filter($todos_tickets, function($t) { return $t['estado'] == 'En Progreso'; }));
 $tickets_resueltos = count(array_filter($todos_tickets, function($t) { return $t['estado'] == 'Resuelto' || $t['estado'] == 'Cerrado'; }));
@@ -30,15 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tecnicoId'], $_POST['
     $tecnicoId = intval($_POST['tecnicoId']);
     $ticketId = intval($_POST['id_ticket']);
     
-    if ($ticket->asignarTecnico($ticketId, $tecnicoId)) {
+    $resultado = $ticket->asignarTecnico($ticketId, $tecnicoId);
+    if ($resultado['success']) {
         header("Location: admin.php?mensaje=tecnico_asignado");
         exit();
     } else {
-        $error_message = "Error al asignar el técnico. Por favor, inténtelo de nuevo.";
+        $error_message = $resultado['message'];
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -217,15 +216,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tecnicoId'], $_POST['
                                                     <span class="badge bg-<?php echo $color; ?>"><?php echo $t['estado']; ?></span>
                                                 </td>
                                                 <td><small><?php echo date('d/m/Y', strtotime($t['fecha_creacion'])); ?></small></td>
-                                                <td class="d-flex justify-content-around">
+                                                <td>
                                                     <?php 
-                                                    if ($t['tecnico_asignado']) {
-                                                        echo htmlspecialchars($t['tecnico_asignado']);
-                                                        echo '<button type="button" class="btn btn-primary asignarTecnicoModal" data-id="' . $t['id'] . '" data-bs-toggle="modal"
-                                                        data-bs-target="#addsuppmodal"><i class="fa-solid fa-retweet"></i></button>';
+                                                    if (isset($t['tecnico_asignado']) && !empty($t['tecnico_asignado'])) {
+                                                        echo '<small class="text-success">' . htmlspecialchars($t['tecnico_asignado']) . '</small><br>';
+                                                        echo '<button type="button" class="btn btn-sm btn-warning asignarTecnicoModal" data-id="' . $t['id'] . '" data-bs-toggle="modal"
+                                                        data-bs-target="#addsuppmodal"><i class="fa-solid fa-retweet"></i> Cambiar</button>';
                                                     } else {
-                                                        echo '<button type="button" class="btn btn-primary asignarTecnicoModal" data-id="' . $t['id'] . '" data-bs-toggle="modal" 
-                                                        data-bs-target="#addsuppmodal"> Asignar Técnico </button>';
+                                                        echo '<button type="button" class="btn btn-sm btn-primary asignarTecnicoModal" data-id="' . $t['id'] . '" data-bs-toggle="modal" 
+                                                        data-bs-target="#addsuppmodal"><i class="fa-solid fa-user-plus"></i> Asignar</button>';
                                                     }
                                                     ?>
                                                 </td>
@@ -359,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tecnicoId'], $_POST['
             <a href="tecnico.php" class="btn btn-primary me-2"> Gestionar Tickets</a>
             <a href="gestionar_usuario.php" class="btn btn-success me-2 text-white"> Ver Usuarios</a>
             <a href="cliente.php" class="btn btn-info me-2 text-white"> Vista de Cliente</a>
-            <a href="../logout.php" class="btn btn-outline-secondary"> Cerrar Sesión</a>
+            <a href="../../logout.php" class="btn btn-outline-secondary"> Cerrar Sesión</a>
         </div>
     </div>
 
@@ -374,12 +373,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tecnicoId'], $_POST['
                 <div class="col-md-6 text-md-end">
                     <p class="mb-0">📞 Contacto: (57) 123-456-7890</p>
                     <p class="mb-0">📧 Email: admin@empresa.com</p>
-                </div>
-            </div>
-        </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../public/Scripts/script.js"></script>
+    <script>
+        // Script para manejar el modal de asignación de técnico
+        document.addEventListener('DOMContentLoaded', function() {
+            const botonesAsignar = document.querySelectorAll('.asignarTecnicoModal');
+            const inputTicketId = document.getElementById('id_ticket');
+            
+            botonesAsignar.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    const ticketId = this.getAttribute('data-id');
+                    inputTicketId.value = ticketId;
+                });
+            });
+        });
+    </script>
 </body>
 </html>

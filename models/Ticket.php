@@ -45,28 +45,8 @@ class Ticket {
             
         } catch (Exception $e) {
             return [
-                'success' => false,
                 'message' => 'Error del sistema: ' . $e->getMessage()
             ];
-        }
-    }
-    
-    public function obtenerTicketsPorUsuario($usuario_id) {
-        try {
-            $query = "SELECT t.*, d.nombre_departamento, u.nombre_usuario 
-                     FROM tickets t 
-                     INNER JOIN departamentos d ON t.departamento_id = d.id 
-                     INNER JOIN usuarios u ON t.usuario_id = u.id 
-                     WHERE t.usuario_id = ? 
-                     ORDER BY t.fecha_creacion DESC";
-            
-            $stmt = $this->db->prepare($query);
-            $stmt->execute([$usuario_id]);
-            
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-        } catch (Exception $e) {
-            return [];
         }
     }
     

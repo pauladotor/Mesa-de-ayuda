@@ -56,7 +56,7 @@ if($_SESSION['rol_id'] == 1) {
                     <a href="../Home/cliente.php" class="btn btn-outline-light btn-sm me-2"> Inicio</a>
                     <a href="nuevo_ticket.php" class="btn btn-success btn-sm me-2"> Nuevo Ticket</a>
                     <?php endif; ?>
-                    <a href="../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
