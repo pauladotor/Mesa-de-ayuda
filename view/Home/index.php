@@ -40,8 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             // Redirigir según el rol
             if ($user_data['rol_id'] == 1) {
                 header("Location: admin.php");
-            } else {
+            } else if ($user_data['rol_id'] == 2) {
                 header("Location: cliente.php");
+            } else if ($user_data['rol_id'] == 3) {
+                header("Location: tecnico.php");
             }
             exit();
         } else {
