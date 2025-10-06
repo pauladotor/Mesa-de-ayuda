@@ -23,9 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             // Redirigir según el rol
             if ($user_data['rol_id'] == 1) {
-                header("Location: ./public/view/admin_dashboard.php");
-            } else {
-                header("Location: ./public/view/cliente_dashboard.php");
+                header("Location: ./public/view/admin.php");
+            } else if ($user_data['rol_id'] == 2) {
+                header("Location: ./public/view/cliente.php");
+            } else if ($user_data['rol_id'] == 3) {
+                header("Location: ./public/view/tecnico.php");
             }
             exit();
         } else {
