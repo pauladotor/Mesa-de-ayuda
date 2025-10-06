@@ -130,9 +130,7 @@ Las siguientes variables de entorno son necesarias para el funcionamiento del si
 
 ### URL de Despliegue
 
-🔗 **[Acceder a la aplicación](https://tu-app.onrender.com/view/Home/index.php)**
-
-> **Nota**: Reemplaza con tu URL real de Render una vez desplegado
+🔗 **[Acceder a la aplicación](https://mesa-de-ayuda-final.onrender.com)**
 
 ### Credenciales de Prueba
 
@@ -145,8 +143,6 @@ Para probar el sistema, puedes usar estas credenciales:
 - **Cliente**:
   - Email: `cliente@mesaayuda.com`
   - Contraseña: `cliente123`
-
-> ⚠️ **Importante**: Cambia estas contraseñas en producción
 
 ## 💻 Instalación Local
 
@@ -175,7 +171,7 @@ docker-compose up -d --build
 
 4. **Acceder a la aplicación**:
 ```
-http://localhost:8080/view/Home/index.php
+https://mesa-de-ayuda-final.onrender.com
 ```
 
 5. **Detener los contenedores**:
@@ -203,5 +199,3 @@ Este proyecto fue desarrollado como parte del curso de Desarrollo de Software.
 Este proyecto es de uso académico.
 
 ---
-
-**Desarrollado con ❤️ para el curso de Desarrollo de Software**
