@@ -5,6 +5,7 @@ class Ticket {
     public function __construct() {
         $this->db = getDB();
     }
+
     
     public function crearTicket($usuario_id, $departamento_id, $asunto, $descripcion, $prioridad = 'Media') {
         try {
@@ -71,12 +72,13 @@ class Ticket {
     
     public function obtenerTodosLosTickets() {
         try {
-            $query = "SELECT t.*, d.nombre_departamento, u.nombre_usuario 
-                     FROM tickets t 
-                     INNER JOIN departamentos d ON t.departamento_id = d.id 
-                     INNER JOIN usuarios u ON t.usuario_id = u.id 
-                     ORDER BY t.fecha_creacion DESC";
-            
+            $query = "SELECT t.*, d.nombre_departamento, u.nombre_usuario, tec.nombre_usuario AS tecnico_asignado
+            FROM tickets t
+            INNER JOIN departamentos d ON t.departamento_id = d.id
+            INNER JOIN usuarios u ON t.usuario_id = u.id
+            LEFT JOIN usuarios tec ON t.tecnico_asignado_id = tec.id
+            ORDER BY t.fecha_creacion DESC";
+
             $stmt = $this->db->prepare($query);
             $stmt->execute();
             
@@ -119,10 +121,23 @@ class Ticket {
             $stmt = $this->db->prepare($query);
             $result = $stmt->execute([$estado, $ticket_id]);
             
-            return $result;
+            if($result) {
+                return [
+                    'success' => true,
+                    'message' => 'Estado del ticket actualizado exitosamente'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al actualizar el estado del ticket'
+                ];
+            }
             
         } catch (Exception $e) {
-            return false;
+            return [
+                'success' => false,
+                'message' => 'Error del sistema: ' . $e->getMessage()
+            ];
         }
     }
     
@@ -131,6 +146,77 @@ class Ticket {
             $query = "SELECT * FROM departamentos ORDER BY nombre_departamento";
             $stmt = $this->db->prepare($query);
             $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    public function asignarTecnico($ticket_id, $tecnico_id) {
+        try {
+            $query = "UPDATE tickets SET tecnico_asignado_id = ?, fecha_actualizacion = NOW() WHERE id = ?";
+            $stmt = $this->db->prepare($query);
+            $result = $stmt->execute([$tecnico_id, $ticket_id]);
+            
+            if ($result) {
+                return [
+                    'success' => true,
+                    'message' => 'Técnico asignado exitosamente'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al asignar el técnico'
+                ];
+            }
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error del sistema: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function cerrarTicket($ticket_id) {
+        try {
+            $query = "UPDATE tickets SET estado = 'Cerrado', fecha_actualizacion = NOW() WHERE id = ?";
+            $stmt = $this->db->prepare($query);
+            $result = $stmt->execute([$ticket_id]);
+
+            if ($result) {
+                return [
+                    'success' => true,
+                    'message' => 'El ticket ha sido cerrado exitosamente.'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Error al cerrar el ticket.'
+                ];
+            }
+
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error del sistema: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    function obtenerTicketsTecnico($tecnico_id) {
+        try {
+            $query = "SELECT t.*, d.nombre_departamento, u.nombre_usuario 
+                     FROM tickets t 
+                     INNER JOIN departamentos d ON t.departamento_id = d.id 
+                     INNER JOIN usuarios u ON t.usuario_id = u.id 
+                     WHERE t.tecnico_asignado_id = ? 
+                     ORDER BY t.fecha_creacion DESC";
+            
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([$tecnico_id]);
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
             

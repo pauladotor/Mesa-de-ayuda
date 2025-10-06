@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS tickets (
     numero_ticket VARCHAR(50) NOT NULL UNIQUE,
     usuario_id INTEGER NOT NULL,
     departamento_id INTEGER NOT NULL,
+    tecnico_asignado_id INTEGER,
     asunto VARCHAR(200) NOT NULL,
     descripcion TEXT NOT NULL,
     prioridad prioridad_type DEFAULT 'Media',
@@ -79,13 +80,16 @@ CREATE TABLE IF NOT EXISTS tickets (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_cierre TIMESTAMP NULL,
+    fecha_resolucion TIMESTAMP NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (departamento_id) REFERENCES departamentos(id) ON DELETE RESTRICT
+    FOREIGN KEY (departamento_id) REFERENCES departamentos(id) ON DELETE RESTRICT,
+    FOREIGN KEY (tecnico_asignado_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
 
 -- Crear índices para tickets
 CREATE INDEX IF NOT EXISTS idx_usuario ON tickets(usuario_id);
 CREATE INDEX IF NOT EXISTS idx_departamento ON tickets(departamento_id);
+CREATE INDEX IF NOT EXISTS idx_tecnico ON tickets(tecnico_asignado_id);
 CREATE INDEX IF NOT EXISTS idx_estado ON tickets(estado);
 CREATE INDEX IF NOT EXISTS idx_fecha_creacion ON tickets(fecha_creacion);
 
