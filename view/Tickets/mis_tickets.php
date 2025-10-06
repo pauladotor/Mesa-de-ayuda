@@ -26,6 +26,10 @@ if ($estado_filtro || $departamento_filtro) {
 }
 
 $departamentos = $ticket->obtenerDepartamentos();
+
+if($_SESSION['rol_id'] == 1) {
+    $mis_tickets = $ticket->obtenerTodosLosTickets();
+}
 ?>
 
 <!DOCTYPE html>
@@ -43,12 +47,16 @@ $departamentos = $ticket->obtenerDepartamentos();
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h1 class="h3 mb-0">🎫 Mis Tickets</h1>
+                    <h1 class="h3 mb-0"><?php echo ($_SESSION['rol_id'] == 1 ? ' Todos los Tickets' : ' Mis Tickets'); ?></h1>
                 </div>
                 <div class="col-md-6 text-end">
-                    <a href="cliente.php" class="btn btn-outline-light btn-sm me-2">🏠 Dashboard</a>
-                    <a href="nuevo_ticket.php" class="btn btn-success btn-sm me-2">➕ Nuevo Ticket</a>
-                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                    <?php if($_SESSION['rol_id'] == 1): ?>
+                        <a href="../Home/admin.php" class="btn btn-outline-light btn-sm me-2"> Menu Admintrador </a>
+                    <?php else: ?>
+                    <a href="../Home/cliente.php" class="btn btn-outline-light btn-sm me-2"> Inicio</a>
+                    <a href="nuevo_ticket.php" class="btn btn-success btn-sm me-2"> Nuevo Ticket</a>
+                    <?php endif; ?>
+                    <a href="../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
@@ -82,8 +90,8 @@ $departamentos = $ticket->obtenerDepartamentos();
                         </select>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary me-2">🔍 Filtrar</button>
-                        <a href="mis_tickets.php" class="btn btn-outline-secondary">🔄 Limpiar</a>
+                        <button type="submit" class="btn btn-primary me-2"> Filtrar</button>
+                        <a href="mis_tickets.php" class="btn btn-outline-secondary"> Limpiar</a>
                     </div>
                 </form>
             </div>
@@ -92,7 +100,7 @@ $departamentos = $ticket->obtenerDepartamentos();
         <!-- Lista de tickets -->
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">📋 Lista de Tickets (<?php echo count($mis_tickets); ?>)</h4>
+                <h4 class="mb-0"> Lista de Tickets (<?php echo count($mis_tickets); ?>)</h4>
             </div>
             <div class="card-body">
                 <?php if (empty($mis_tickets)): ?>
@@ -148,17 +156,17 @@ $departamentos = $ticket->obtenerDepartamentos();
                                             $prioridad_colors = [
                                                 'Baja' => 'success',
                                                 'Media' => 'warning',
-                                                'Alta' => 'orange',
+                                                'Alta' => 'danger',
                                                 'Crítica' => 'danger'
                                             ];
                                             $prioridad_icons = [
-                                                'Baja' => '🟢',
-                                                'Media' => '🟡',
-                                                'Alta' => '🟠',
-                                                'Crítica' => '🔴'
+                                                'Baja' => '',
+                                                'Media' => '',
+                                                'Alta' => '',
+                                                'Crítica' => ''
                                             ];
                                             $color = $prioridad_colors[$t['prioridad']] ?? 'secondary';
-                                            $icon = $prioridad_icons[$t['prioridad']] ?? '⚪';
+                                            $icon = $prioridad_icons[$t['prioridad']] ?? '';
                                             ?>
                                             <span class="badge bg-<?php echo $color; ?>">
                                                 <?php echo $icon . ' ' . htmlspecialchars($t['prioridad']); ?>
@@ -173,10 +181,10 @@ $departamentos = $ticket->obtenerDepartamentos();
                                                 'Cerrado' => 'secondary'
                                             ];
                                             $estado_icons = [
-                                                'Abierto' => '🔓',
-                                                'En Progreso' => '⚙️',
-                                                'Resuelto' => '✅',
-                                                'Cerrado' => '🔒'
+                                                'Abierto' => '',
+                                                'En Progreso' => '',
+                                                'Resuelto' => '',
+                                                'Cerrado' => ''
                                             ];
                                             $color = $estado_colors[$t['estado']] ?? 'secondary';
                                             $icon = $estado_icons[$t['estado']] ?? '❓';
@@ -198,9 +206,9 @@ $departamentos = $ticket->obtenerDepartamentos();
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="ver_ticket.php?id=<?php echo $t['id']; ?>" 
-                                                   class="btn btn-outline-primary btn-sm" 
-                                                   title="Ver detalles">
-                                                    👁️
+                                                class="btn btn-outline-primary btn-sm" 
+                                                title="Ver detalles">
+                                                    ver detalles
                                                 </a>
                                             </div>
                                         </td>
@@ -209,10 +217,14 @@ $departamentos = $ticket->obtenerDepartamentos();
                             </tbody>
                         </table>
                     </div>
+                    <div>
+                        <a href="../Home/admin.php" class="btn btn-primary">volver</a>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
+    <br><br><br><br><br><br><br>
 
     <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-5">

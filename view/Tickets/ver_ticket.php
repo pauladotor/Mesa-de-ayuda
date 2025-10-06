@@ -17,13 +17,43 @@ require_once '../../models/Ticket.php';
 $ticket = new Ticket();
 $ticket_id = (int)$_GET['id'];
 
-$ticket_data = $ticket->obtenerTicketPorId($ticket_id, $_SESSION['user_id']);
+// Permitir ver el ticket si es el propietario o si es admin/técnico
+if(isset($_GET['usuario_id']) && !empty($_GET['usuario_id'])) {
+    $usuario_id = (int)$_GET['usuario_id'];
+} else {
+    $usuario_id = $_SESSION['user_id'];
+}
+
+if($_SESSION['rol_id'] == 1 && !isset($_GET['usuario_id'])) {
+    $usuario_id = $ticket->obtenerTicketPorId($ticket_id)['usuario_id'];
+    header("Location: ver_ticket.php?id=$ticket_id&usuario_id=$usuario_id");
+    exit();
+}
+
+$ticket_data = $ticket->obtenerTicketPorId($ticket_id, $usuario_id);
 
 if (!$ticket_data) {
     $_SESSION['error'] = "Ticket no encontrado o no tienes permisos para verlo.";
     header("Location: mis_tickets.php");
     exit();
 }
+
+// Manejar cierre de ticket
+if (isset($_GET['cerrarTicket']) && $_GET['cerrarTicket'] == 1) {
+    if ($ticket_data['estado'] == 'Resuelto') {
+        $cerrar_resultado = $ticket->cerrarTicket($ticket_id);
+        if ($cerrar_resultado['success']) {
+            $_SESSION['success'] = "El ticket ha sido cerrado exitosamente.";
+        } else {
+            $_SESSION['error'] = $cerrar_resultado['message'];
+        }
+    } else {
+        $_SESSION['error'] = "Solo se pueden cerrar tickets que estén en estado 'Resuelto'.";
+    }
+    header("Location: ver_ticket.php?id=" . $ticket_id);
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -43,9 +73,13 @@ if (!$ticket_data) {
                     <h1 class="h3 mb-0"> Ticket <?php echo htmlspecialchars($ticket_data['numero_ticket']); ?></h1>
                 </div>
                 <div class="col-md-6 text-end">
-                    <a href="mis_tickets.php" class="btn btn-outline-light btn-sm me-2"> Mis Tickets</a>
-                    <a href="cliente.php" class="btn btn-outline-light btn-sm me-2"> Dashboard</a>
-                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                    <?php if ($_SESSION['rol_id'] == 1 || $_SESSION['rol_id'] == 3) {?>
+                        <a href="<?php echo $_SESSION['rol_id'] == 1 ? '../Home/admin.php' : '../Home/tecnico.php'; ?>" class="btn btn-outline-light btn-sm me-2"> Dashboard</a>
+                    <?php } else { ?>
+                        <a href="mis_tickets.php" class="btn btn-outline-light btn-sm me-2"> Mis Tickets</a>
+                        <a href="../Home/cliente.php" class="btn btn-outline-light btn-sm me-2"> Dashboard</a>
+                    <?php } ?>
+                    <a href="../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
@@ -274,9 +308,8 @@ if (!$ticket_data) {
         }
         
         function cerrarTicket() {
-            // Aquí iría la lógica para cerrar el ticket
-            alert('Funcionalidad de cerrar ticket en desarrollo');
             bootstrap.Modal.getInstance(document.getElementById('cerrarTicketModal')).hide();
+            window.location.href = 'ver_ticket.php?id=<?php echo $ticket_data['id']; ?>&cerrarTicket=1';
         }
         
         function copiarEnlace() {
