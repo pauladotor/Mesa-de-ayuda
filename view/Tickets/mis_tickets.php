@@ -48,7 +48,7 @@ $departamentos = $ticket->obtenerDepartamentos();
                 <div class="col-md-6 text-end">
                     <a href="cliente.php" class="btn btn-outline-light btn-sm me-2">🏠 Dashboard</a>
                     <a href="nuevo_ticket.php" class="btn btn-success btn-sm me-2">➕ Nuevo Ticket</a>
-                    <a href="logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
                 </div>
             </div>
         </div>

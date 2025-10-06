@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['crear_ticket'])) {
                 </div>
                 <div class="col-md-6 text-end">
                     <a href="../Home/cliente.php" class="btn btn-outline-light btn-sm me-2">🏠 Dashboard</a>
-                    <a href="logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                    <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
                 </div>
             </div>
         </div>

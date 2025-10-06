@@ -82,7 +82,7 @@ if(isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['estado']) && !empty
                     ?>
                 </span>
                 <a href="perfil.php" class="btn btn-outline-warning btn-sm">Perfil</a>
-                <a href="../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                <a href="../../logout.php" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
             </div>
         </div>
     </div>
