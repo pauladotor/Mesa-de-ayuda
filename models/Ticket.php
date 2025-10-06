@@ -206,7 +206,7 @@ class Ticket {
         }
     }
 
-    function obtenerTicketsTecnico($tecnico_id) {
+    public function obtenerTicketsTecnico($tecnico_id) {
         try {
             $query = "SELECT t.*, d.nombre_departamento, u.nombre_usuario 
                      FROM tickets t 
