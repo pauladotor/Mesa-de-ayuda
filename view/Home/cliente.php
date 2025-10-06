@@ -6,6 +6,12 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Validar que solo clientes (rol 2) puedan acceder
+if (!isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 2) {
+    header("Location: index.php");
+    exit();
+}
+
 require_once '../../config/conexion.php';
 require_once '../../models/Ticket.php';
 

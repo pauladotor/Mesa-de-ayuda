@@ -35,17 +35,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             $_SESSION['nombre_usuario'] = $user_data['nombre_usuario'];
             $_SESSION['correo_usuario'] = $user_data['correo_usuario'];
             $_SESSION['rol'] = $user_data['nombre_rol'];
-            $_SESSION['rol_id'] = $user_data['rol_id'];
+            $_SESSION['rol_id'] = (int)$user_data['rol_id']; // Convertir a entero
             
-            // Redirigir según el rol
-            if ($user_data['rol_id'] == 1) {
+            // Redirigir según el rol (usar comparación estricta)
+            $rol_id = (int)$user_data['rol_id'];
+            
+            if ($rol_id === 1) {
                 header("Location: admin.php");
-            } else if ($user_data['rol_id'] == 2) {
+                exit();
+            } elseif ($rol_id === 2) {
                 header("Location: cliente.php");
-            } else if ($user_data['rol_id'] == 3) {
+                exit();
+            } elseif ($rol_id === 3) {
                 header("Location: tecnico.php");
+                exit();
+            } else {
+                // Rol no reconocido, redirigir a página de error
+                header("Location: index.php?error=Rol no válido");
+                exit();
             }
-            exit();
         } else {
             $error_message = $result['message'];
         }
